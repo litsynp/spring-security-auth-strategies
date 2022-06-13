@@ -1,5 +1,6 @@
 package com.litsynp.springsecsession.domain.member.dto;
 
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import lombok.Builder;
@@ -14,4 +15,10 @@ public class MemberResponseDto {
 
     @NotEmpty
     private String email;
+
+    @NotNull
+    private LocalDateTime createdOn;
+
+    @NotNull
+    private LocalDateTime updatedOn;
 }

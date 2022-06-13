@@ -17,6 +17,8 @@ public class MemberMapper {
         return MemberResponseDto.builder()
                 .id(member.getId())
                 .email(member.getEmail())
+                .createdOn(member.getCreatedOn())
+                .updatedOn(member.getUpdatedOn())
                 .build();
     }
 }

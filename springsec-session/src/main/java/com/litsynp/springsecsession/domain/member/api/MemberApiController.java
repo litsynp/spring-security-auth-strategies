@@ -43,12 +43,14 @@ public class MemberApiController {
     public ResponseEntity<MemberResponseDto> one(@PathVariable Long id) {
         Member member = memberService.findById(id);
         MemberResponseDto response = memberMapper.toResponseDto(member);
+
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         memberService.deleteById(id);
+
         return ResponseEntity.noContent().build();
     }
 }
