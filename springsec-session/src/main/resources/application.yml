@@ -1,5 +1,8 @@
 server:
   port: 8081
+  servlet:
+    session:
+      timeout: 1800 # 30 mins
 spring:
   jpa:
     hibernate:
