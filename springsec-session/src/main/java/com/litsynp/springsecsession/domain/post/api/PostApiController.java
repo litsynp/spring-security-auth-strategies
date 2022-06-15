@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class PostApiController {
     private final PostMapper postMapper;
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostResponseDto> writePost(@Valid @RequestBody PostCreateRequestDto dto) {
         Post writtenPost = postService.create(postMapper.toServiceDto(dto));
         PostResponseDto response = postMapper.toResponseDto(writtenPost);
@@ -63,6 +65,7 @@ public class PostApiController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long id, @Valid @RequestBody PostUpdateRequestDto dto) {
         Post updatedPost = postService.update(id, postMapper.toServiceDto(dto));
@@ -72,6 +75,7 @@ public class PostApiController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         postService.deleteById(id);
 
