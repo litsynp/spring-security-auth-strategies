@@ -1,5 +1,6 @@
 package com.litsynp.springsecsession.global.config;
 
+import com.litsynp.springsecsession.global.auth.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,9 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .httpBasic().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .and()
                 .authorizeHttpRequests((authz) -> authz
                         .antMatchers("/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll());
