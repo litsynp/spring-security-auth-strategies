@@ -40,4 +40,12 @@ public class Member extends BaseTimeEntity {
         this.active = true;
         this.role = RoleType.USER;
     }
+
+    @Builder
+    public Member(String email, String password, RoleType role) {
+        this.email = email;
+        this.password = password;
+        this.active = true;
+        this.role = role;
+    }
 }
