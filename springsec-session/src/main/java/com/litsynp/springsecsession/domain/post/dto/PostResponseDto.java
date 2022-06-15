@@ -11,6 +11,9 @@ import lombok.Data;
 public class PostResponseDto {
 
     @NotNull
+    private Long id;
+
+    @NotNull
     private Long memberId;
 
     @NotEmpty

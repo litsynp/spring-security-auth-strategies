@@ -8,9 +8,12 @@ public class PostMapper {
 
     public PostResponseDto toResponseDto(Post post) {
         return PostResponseDto.builder()
+                .id(post.getId())
                 .memberId(post.getMember().getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .createdOn(post.getCreatedOn())
+                .updatedOn(post.getUpdatedOn())
                 .build();
     }
 
