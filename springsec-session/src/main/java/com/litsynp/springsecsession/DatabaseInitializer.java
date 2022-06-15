@@ -3,6 +3,8 @@ package com.litsynp.springsecsession;
 import com.litsynp.springsecsession.domain.member.domain.Member;
 import com.litsynp.springsecsession.domain.member.dao.MemberRepository;
 import com.litsynp.springsecsession.domain.member.domain.RoleType;
+import com.litsynp.springsecsession.domain.post.dao.PostRepository;
+import com.litsynp.springsecsession.domain.post.domain.Post;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,7 @@ public class DatabaseInitializer {
 
     @PostConstruct
     public void init() {
-        initService.createMembers(10);
+        initService.createMembersAndPosts(10);
         initService.createAdmin();
     }
 
@@ -29,16 +31,19 @@ public class DatabaseInitializer {
     static class InitService {
 
         private final MemberRepository memberRepository;
+        private final PostRepository postRepository;
         private final PasswordEncoder passwordEncoder;
 
         /**
          * Create members
          */
-        public void createMembers(int num) {
-            for (int i = 0; i < num; i++) {
-                memberRepository.save(
+        public void createMembersAndPosts(int num) {
+            for (int i = 1; i <= num; i++) {
+                Member member = memberRepository.save(
                         new Member("testuser" + i + "@example.com",
                                 passwordEncoder.encode("12345678")));
+
+                createPost(member);
             }
         }
 
@@ -51,6 +56,15 @@ public class DatabaseInitializer {
                             RoleType.ADMIN));
 
             log.info("Admin user ID: " + admin.getId() + ", Admin user email: " + admin.getEmail());
+        }
+
+        /**
+         * Create a post by member
+         */
+        public void createPost(Member member) {
+            postRepository.save(new Post(member,
+                    "Test title by " + member.getEmail() + "(" + +member.getId() + ")",
+                    "Test content"));
         }
     }
 }
