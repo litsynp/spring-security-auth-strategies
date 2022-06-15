@@ -1,5 +1,6 @@
 package com.litsynp.springsecsession.domain.member.api;
 
+import com.litsynp.springsecsession.domain.auth.service.AuthService;
 import com.litsynp.springsecsession.domain.member.domain.Member;
 import com.litsynp.springsecsession.domain.member.dto.MemberCreateRequestDto;
 import com.litsynp.springsecsession.domain.member.dto.MemberMapper;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class MemberApiController {
 
     private final MemberService memberService;
+    private final AuthService authService;
     private final MemberMapper memberMapper;
 
     @PostMapping
@@ -52,7 +54,9 @@ public class MemberApiController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        memberService.deleteById(id);
+        Member existing = memberService.findById(id);
+        authService.checkAuthorization(existing.getId());
+        memberService.delete(existing);
 
         return ResponseEntity.noContent().build();
     }

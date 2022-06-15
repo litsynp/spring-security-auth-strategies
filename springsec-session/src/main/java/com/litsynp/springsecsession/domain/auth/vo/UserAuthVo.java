@@ -1,16 +1,22 @@
 package com.litsynp.springsecsession.domain.auth.vo;
 
 import com.litsynp.springsecsession.domain.member.domain.Member;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 @Builder
 @AllArgsConstructor
-public class UserAuthVo {
+public class UserAuthVo implements Serializable {
 
+    private Long id;
     private String email;
     private String password;
     private Boolean active;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getVoEmail() {
         return email;
@@ -26,6 +32,7 @@ public class UserAuthVo {
 
     public static UserAuthVo fromEntity(Member member) {
         return UserAuthVo.builder()
+                .id(member.getId())
                 .email(member.getEmail())
                 .password(member.getPassword())
                 .active(member.getActive())

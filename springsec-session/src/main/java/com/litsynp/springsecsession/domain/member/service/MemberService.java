@@ -28,10 +28,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        Member found = memberRepository.findById(id)
-                .orElseThrow(() -> new MemberNotFoundException(id));
-
-        memberRepository.delete(found);
+    public void delete(Member member) {
+        memberRepository.delete(member);
     }
 }

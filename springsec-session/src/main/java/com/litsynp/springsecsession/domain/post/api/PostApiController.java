@@ -1,5 +1,6 @@
 package com.litsynp.springsecsession.domain.post.api;
 
+import com.litsynp.springsecsession.domain.auth.service.AuthService;
 import com.litsynp.springsecsession.domain.post.domain.Post;
 import com.litsynp.springsecsession.domain.post.dto.PostCreateRequestDto;
 import com.litsynp.springsecsession.domain.post.dto.PostMapper;
@@ -32,6 +33,7 @@ public class PostApiController {
 
     private final PostService postService;
     private final PostMapper postMapper;
+    private final AuthService authService;
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -66,10 +68,12 @@ public class PostApiController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<PostResponseDto> updatePost(
-            @PathVariable Long id, @Valid @RequestBody PostUpdateRequestDto dto) {
-        Post updatedPost = postService.update(id, postMapper.toServiceDto(dto));
-        PostResponseDto response = postMapper.toResponseDto(updatedPost);
+    public ResponseEntity<PostResponseDto> updatePost(@PathVariable Long id,
+            @Valid @RequestBody PostUpdateRequestDto dto) {
+        Post existing = postService.findById(id);
+        authService.checkAuthorization(existing.getMember().getId());
+        Post updated = postService.update(existing, postMapper.toServiceDto(dto));
+        PostResponseDto response = postMapper.toResponseDto(updated);
 
         return ResponseEntity.ok(response);
     }
@@ -77,7 +81,9 @@ public class PostApiController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        postService.deleteById(id);
+        Post existing = postService.findById(id);
+        authService.checkAuthorization(existing.getMember().getId());
+        postService.delete(existing);
 
         return ResponseEntity.noContent().build();
     }

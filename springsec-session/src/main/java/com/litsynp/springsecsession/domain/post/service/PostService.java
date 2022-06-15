@@ -1,5 +1,6 @@
 package com.litsynp.springsecsession.domain.post.service;
 
+import com.litsynp.springsecsession.domain.auth.service.AuthService;
 import com.litsynp.springsecsession.domain.member.dao.MemberRepository;
 import com.litsynp.springsecsession.domain.member.domain.Member;
 import com.litsynp.springsecsession.domain.post.dao.PostRepository;
@@ -20,6 +21,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final AuthService authService;
 
     @Transactional
     public Post create(PostServiceCreateRequestDto dto) {
@@ -47,20 +49,14 @@ public class PostService {
     }
 
     @Transactional
-    public Post update(Long id, PostServiceUpdateRequestDto dto) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(id));
-
+    public Post update(Post post, PostServiceUpdateRequestDto dto) {
         post.update(post.getMember(), dto.getTitle(), dto.getContent());
 
         return postRepository.save(post);
     }
 
     @Transactional
-    public void deleteById(Long id) {
-        Post found = postRepository.findById(id)
-                .orElseThrow(() -> new PostNotFoundException(id));
-
-        postRepository.delete(found);
+    public void delete(Post post) {
+        postRepository.delete(post);
     }
 }
