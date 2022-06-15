@@ -1,10 +1,14 @@
 package com.litsynp.springsecsession.domain.auth.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class AuthResponseDto {
 
     Boolean success;

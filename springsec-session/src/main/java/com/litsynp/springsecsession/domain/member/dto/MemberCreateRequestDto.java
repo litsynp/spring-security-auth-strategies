@@ -1,9 +1,15 @@
 package com.litsynp.springsecsession.domain.member.dto;
 
 import javax.validation.constraints.Size;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class MemberCreateRequestDto {
 
     @Size(min = 6, max = 345, message = "The email must be between {min} and {max} characters long")
