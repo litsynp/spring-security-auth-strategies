@@ -1,2 +1,5 @@
-rootProject.name = 'springsec-common'
+rootProject.name = 'springsec'
+include 'springsec-common'
 include 'springsec-session'
+include 'springsec-jwt'
+

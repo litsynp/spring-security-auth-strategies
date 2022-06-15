@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.litsynp'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+test {
+    useJUnitPlatform()
+}
