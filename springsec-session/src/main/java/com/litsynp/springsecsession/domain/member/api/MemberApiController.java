@@ -6,6 +6,7 @@ import com.litsynp.springsecsession.domain.member.dto.MemberMapper;
 import com.litsynp.springsecsession.domain.member.dto.MemberResponseDto;
 import com.litsynp.springsecsession.domain.member.service.MemberService;
 import java.net.URI;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +28,7 @@ public class MemberApiController {
 
     @PostMapping
     public ResponseEntity<MemberResponseDto> register(
-            @RequestBody MemberCreateRequestDto memberDto) {
+            @Valid @RequestBody MemberCreateRequestDto memberDto) {
         Member registeredMember = memberService.register(memberMapper.toEntity(memberDto));
         MemberResponseDto response = memberMapper.toResponseDto(registeredMember);
 

@@ -7,6 +7,7 @@ import com.litsynp.springsecsession.domain.post.dto.PostResponseDto;
 import com.litsynp.springsecsession.domain.post.dto.PostUpdateRequestDto;
 import com.litsynp.springsecsession.domain.post.service.PostService;
 import java.net.URI;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,7 @@ public class PostApiController {
     private final PostMapper postMapper;
 
     @PostMapping
-    public ResponseEntity<PostResponseDto> writePost(@RequestBody PostCreateRequestDto dto) {
+    public ResponseEntity<PostResponseDto> writePost(@Valid @RequestBody PostCreateRequestDto dto) {
         Post writtenPost = postService.create(postMapper.toServiceDto(dto));
         PostResponseDto response = postMapper.toResponseDto(writtenPost);
 
@@ -63,7 +64,7 @@ public class PostApiController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PostResponseDto> updatePost(
-            @PathVariable Long id, @RequestBody PostUpdateRequestDto dto) {
+            @PathVariable Long id, @Valid @RequestBody PostUpdateRequestDto dto) {
         Post updatedPost = postService.update(id, postMapper.toServiceDto(dto));
         PostResponseDto response = postMapper.toResponseDto(updatedPost);
 
