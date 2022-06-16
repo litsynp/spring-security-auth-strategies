@@ -7,25 +7,30 @@ import static org.mockito.Mockito.mock;
 
 import com.litsynp.springsec.oauth.config.SpringSecurityWebAuxTestConfig;
 import com.litsynp.springsec.oauth.domain.auth.vo.UserDetailsVo;
+import com.litsynp.springsec.oauth.global.config.AuthProperties;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
-@Import({JwtUtil.class, SpringSecurityWebAuxTestConfig.class})
+@Import({JwtUtil.class, AuthProperties.class, SpringSecurityWebAuxTestConfig.class})
+@EnableConfigurationProperties
 @TestPropertySource(properties = {
         "app.auth.jwt-secret=foobar",
         "app.auth.jwt-access-expiration-ms=3600000"})
+@ActiveProfiles({"jwt", "oauth"})
 class JwtUtilTest {
 
-    @Value("${app.jwt-secret}")
+    @Value("${app.auth.jwt-secret}")
     private String jwtSecret;
 
     @Autowired
@@ -42,17 +47,17 @@ class JwtUtilTest {
         String jwtToken = jwtUtil.generateToken(authentication);
 
         // then
-        String subject = Jwts.parser()
+        Long subject = Long.parseLong(Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(jwtToken)
                 .getBody()
-                .getSubject();
+                .getSubject());
 
-        assertThat(subject).isEqualTo(getBasicMember().getEmail());
+        assertThat(subject).isEqualTo(getBasicMember().getId());
     }
 
     @Test
-    void generateTokenFromEmail_ok() {
+    void generateTokenFromMemberId_ok() {
         // given
         Long memberId = getBasicMember().getId();
 
@@ -60,17 +65,17 @@ class JwtUtilTest {
         String jwtToken = jwtUtil.generateTokenFromMemberId(memberId);
 
         // then
-        String subject = Jwts.parser()
+        Long subject = Long.parseLong(Jwts.parser()
                 .setSigningKey(jwtSecret)
                 .parseClaimsJws(jwtToken)
                 .getBody()
-                .getSubject();
+                .getSubject());
 
-        assertThat(subject).isEqualTo(getBasicMember().getEmail());
+        assertThat(subject).isEqualTo(memberId);
     }
 
     @Test
-    void getEmailFromToken_ok() {
+    void getMemberIdStrFromToken_ok() {
         // given
         Long memberId = getBasicMember().getId();
         String jwtToken = jwtUtil.generateTokenFromMemberId(memberId);

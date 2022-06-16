@@ -37,14 +37,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestPropertySource;
 
 @WebMvcTest(AuthApiController.class)
 @Import({AuthMapper.class})
-@TestPropertySource(properties = {
-        "app.auth.jwt-secret=foobar",
-        "app.auth.jwt-access-expiration-ms=3600000",
-        "app.auth.jwt-refresh-expiration-ms=86400000"})
 class AuthApiControllerTest extends ApiMockControllerTest {
 
     @Mock
@@ -62,13 +57,13 @@ class AuthApiControllerTest extends ApiMockControllerTest {
     @Autowired
     private AuthMapper authMapper;
 
-    @Value("${app.jwt-secret}")
+    @Value("${app.auth.jwt-secret}")
     private String jwtSecret;
 
-    @Value("${app.jwt-access-expiration-ms}")
+    @Value("${app.auth.jwt-access-expiration-ms}")
     private int jwtAccessExpirationMs;
 
-    @Value("${app.jwt-refresh-expiration-ms}")
+    @Value("${app.auth.jwt-refresh-expiration-ms}")
     private int jwtRefreshExpirationMs;
 
     @Test
