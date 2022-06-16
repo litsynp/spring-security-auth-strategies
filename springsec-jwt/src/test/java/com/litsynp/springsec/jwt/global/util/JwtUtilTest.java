@@ -21,8 +21,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @Import({JwtUtil.class, SpringSecurityWebAuxTestConfig.class})
 @TestPropertySource(properties = {
-        "app.jwt-secret=3600000",
-        "app.jwt-access-expiration-ms=86400000"})
+        "app.jwt-secret=foobar",
+        "app.jwt-access-expiration-ms=3600000"})
 class JwtUtilTest {
 
     @Value("${app.jwt-secret}")
