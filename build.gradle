@@ -56,3 +56,11 @@ project(':springsec-jwt') {
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
     }
 }
+
+project(':springsec-oauth') {
+    dependencies {
+        api project(':springsec-common')
+        implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+        implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    }
+}

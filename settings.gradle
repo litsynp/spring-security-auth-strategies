@@ -2,4 +2,5 @@ rootProject.name = 'springsec'
 include 'springsec-common'
 include 'springsec-session'
 include 'springsec-jwt'
+include 'springsec-oauth'
 

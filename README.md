@@ -18,3 +18,4 @@ Some methods I plan to add are:
 - **springsec**: The root module.
     - **springsec-session**: Implements session login. 
     - **springsec-jwt**: Implements [JWT](https://jwt.io/introduction) ([Bearer](https://oauth.net/2/bearer-tokens/)) login.
+    - **springsec-oauth**: Implements [OAuth 2.0](https://oauth.net/2/) login with different OAuth providers.
