@@ -1,9 +1,7 @@
 package com.litsynp.springsec.jwt.domain.member.domain;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

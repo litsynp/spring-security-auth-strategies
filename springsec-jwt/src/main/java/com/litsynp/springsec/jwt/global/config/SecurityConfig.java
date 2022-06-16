@@ -2,7 +2,6 @@ package com.litsynp.springsec.jwt.global.config;
 
 import com.litsynp.springsec.jwt.global.auth.JwtAuthEntryPoint;
 import com.litsynp.springsec.jwt.global.auth.JwtAuthTokenFilter;
-import com.litsynp.springsec.jwt.global.util.JwtUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
