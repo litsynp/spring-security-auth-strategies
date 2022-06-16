@@ -1,14 +1,14 @@
 package com.litsynp.springsec.session.domain.post.service;
 
 import com.litsynp.springsec.session.domain.auth.service.AuthService;
-import com.litsynp.springsec.session.domain.post.dao.PostRepository;
-import com.litsynp.springsec.session.domain.post.domain.Post;
-import com.litsynp.springsec.session.domain.post.dto.PostServiceUpdateRequestDto;
-import com.litsynp.springsec.session.domain.post.exception.PostMemberNotFoundException;
-import com.litsynp.springsec.session.domain.post.exception.PostNotFoundException;
 import com.litsynp.springsec.session.domain.member.dao.MemberRepository;
 import com.litsynp.springsec.session.domain.member.domain.Member;
+import com.litsynp.springsec.session.domain.member.exception.MemberIdNotFoundException;
+import com.litsynp.springsec.session.domain.post.dao.PostRepository;
+import com.litsynp.springsec.session.domain.post.domain.Post;
 import com.litsynp.springsec.session.domain.post.dto.PostServiceCreateRequestDto;
+import com.litsynp.springsec.session.domain.post.dto.PostServiceUpdateRequestDto;
+import com.litsynp.springsec.session.domain.post.exception.PostNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +26,7 @@ public class PostService {
     @Transactional
     public Post create(PostServiceCreateRequestDto dto) {
         Member member = memberRepository.findById(dto.getMemberId())
-                .orElseThrow(() -> new PostMemberNotFoundException(dto.getMemberId()));
+                .orElseThrow(() -> new MemberIdNotFoundException(dto.getMemberId()));
 
         Post post = Post.builder()
                 .member(member)

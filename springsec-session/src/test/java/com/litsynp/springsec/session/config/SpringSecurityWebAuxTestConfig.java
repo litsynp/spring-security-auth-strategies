@@ -38,8 +38,8 @@ public class SpringSecurityWebAuxTestConfig {
     @Bean
     @Primary
     public UserDetailsService userDetailsService() {
-        UserDetailsVo basicMemberDetails = new UserDetailsVo(basicMember);
-        UserDetailsVo adminMemberDetails = new UserDetailsVo(adminMember);
+        UserDetailsVo basicMemberDetails = UserDetailsVo.from(basicMember);
+        UserDetailsVo adminMemberDetails = UserDetailsVo.from(adminMember);
 
         return new InMemoryUserDetailsManager(
                 Arrays.asList(basicMemberDetails, adminMemberDetails));

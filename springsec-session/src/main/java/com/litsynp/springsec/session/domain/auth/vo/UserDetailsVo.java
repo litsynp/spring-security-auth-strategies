@@ -3,6 +3,8 @@ package com.litsynp.springsec.session.domain.auth.vo;
 import com.litsynp.springsec.session.domain.member.domain.Member;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
@@ -19,10 +21,11 @@ public class UserDetailsVo implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsVo(Member member) {
-        this.userVo = UserAuthVo.fromEntity(member);
-        this.authorities = Collections.singleton(
+    public static UserDetailsVo from(Member member) {
+        UserAuthVo user = UserAuthVo.fromEntity(member);
+        Set<SimpleGrantedAuthority> authorities = Collections.singleton(
                 new SimpleGrantedAuthority(member.getRole().getValue()));
+        return new UserDetailsVo(user, authorities);
     }
 
     @Override
@@ -58,5 +61,17 @@ public class UserDetailsVo implements UserDetails {
     @Override
     public boolean isEnabled() {
         return userVo.getVoActive();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        UserDetailsVo user = (UserDetailsVo) o;
+        return Objects.equals(this.userVo.getId(), user.getId());
     }
 }
