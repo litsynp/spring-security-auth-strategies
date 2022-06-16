@@ -32,7 +32,7 @@ public class SpringSecurityWebAuxTestConfig {
         FieldUtil.writeField(basicMember, "id", 1L);
 
         adminMember = new Member("admin@example.com", "12345678", RoleType.ADMIN);
-        FieldUtil.writeField(basicMember, "id", 2L);
+        FieldUtil.writeField(adminMember, "id", 2L);
     }
 
     @Bean
