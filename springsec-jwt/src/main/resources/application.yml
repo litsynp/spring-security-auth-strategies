@@ -22,4 +22,5 @@ spring:
 
 app:
   jwt-secret: foobar
-  jwt-expiration-ms: 86400000
+  jwt-access-expiration-ms: 3600000
+  jwt-refresh-expiration-ms: 86400000

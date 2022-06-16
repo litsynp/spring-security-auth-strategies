@@ -20,8 +20,8 @@ public class JwtUtil {
     @Value("${app.jwt-secret}")
     private String jwtSecret;
 
-    @Value("${app.jwt-expiration-ms}")
-    private int jwtExpirationMs;
+    @Value("${app.jwt-access-expiration-ms}")
+    private int jwtAccessExpirationMs;
 
     public String generateToken(Authentication authentication) {
         UserDetailsVo userPrincipal = (UserDetailsVo) authentication.getPrincipal();
@@ -29,7 +29,17 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(userPrincipal.getVoEmail())
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + jwtExpirationMs))
+                .setExpiration(new Date(now.getTime() + jwtAccessExpirationMs))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public String generateTokenFromEmail(String email) {
+        Date now = new Date();
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + jwtAccessExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }

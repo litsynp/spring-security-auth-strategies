@@ -1,6 +1,5 @@
 package com.litsynp.springsec.jwt.domain.auth.dto;
 
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TokenValidateRequestDto {
+public class AccessTokenValidateResponseDto {
 
-    @NotNull(message = "accessToken cannot be null")
-    private String accessToken;
+    private Boolean valid;
 }
