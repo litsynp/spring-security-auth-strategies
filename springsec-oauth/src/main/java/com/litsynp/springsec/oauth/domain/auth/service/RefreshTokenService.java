@@ -9,20 +9,18 @@ import com.litsynp.springsec.oauth.domain.member.exception.MemberIdNotFoundExcep
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final MemberRepository memberRepository;
 
-    @Value("${app.jwt-refresh-expiration-ms}")
+    @Value("${app.auth.jwt-refresh-expiration-ms}")
     private Long refreshTokenExpirationMs;
 
     @Transactional
@@ -34,7 +32,7 @@ public class RefreshTokenService {
                 .expireAt(LocalDateTime.now().plusSeconds(refreshTokenExpirationMs / 1000))
                 .build();
 
-        return refreshTokenRepository.save(refreshToken);
+        return refreshTokenRepository.saveAndFlush(refreshToken);
     }
 
     @Transactional(readOnly = true)
@@ -45,8 +43,6 @@ public class RefreshTokenService {
 
     @Transactional(readOnly = true)
     public void verifyExpiration(RefreshToken refreshToken) {
-        log.info(refreshToken.getExpireAt().toString());
-        log.info(LocalDateTime.now().toString());
         if (refreshToken.isExpired()) {
             refreshTokenRepository.delete(refreshToken);
             throw new RefreshTokenExpiredException();

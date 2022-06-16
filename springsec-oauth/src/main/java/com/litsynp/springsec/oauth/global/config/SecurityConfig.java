@@ -1,7 +1,12 @@
 package com.litsynp.springsec.oauth.global.config;
 
+import com.litsynp.springsec.oauth.domain.oauth.service.OAuth2UserService;
+import com.litsynp.springsec.oauth.global.auth.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.litsynp.springsec.oauth.global.auth.JwtAuthEntryPoint;
 import com.litsynp.springsec.oauth.global.auth.JwtAuthTokenFilter;
+import com.litsynp.springsec.oauth.global.auth.OAuth2AuthenticationFailureHandler;
+import com.litsynp.springsec.oauth.global.auth.OAuth2AuthenticationSuccessHandler;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +30,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, jsr250Enabled = true)
@@ -33,9 +40,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
-
+    private final OAuth2UserService oAuth2UserService;
     private final JwtAuthEntryPoint unauthorizedHandler;
     private final JwtAuthTokenFilter authenticationJwtTokenFilter;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository;
+    private final CorsProperties corsProperties;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -43,13 +54,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .httpBasic().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(unauthorizedHandler).and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests(authz -> authz
-                        .antMatchers("/v1/admin/**").hasRole("ADMIN")
+//                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+//                        .antMatchers("/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
-                        .expressionHandler(expressionHandler()));
+                        .expressionHandler(expressionHandler()))
+                .oauth2Login(oAuthz -> oAuthz
+                        .authorizationEndpoint()
+                        .baseUri("/oauth2/authorize")
+                        .authorizationRequestRepository(
+                                cookieAuthorizationRequestRepository).and()
+                        .redirectionEndpoint().baseUri("/*/oauth2/code/*").and()
+                        .userInfoEndpoint().userService(oAuth2UserService).and()
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler));
 
         http
                 .addFilterBefore(authenticationJwtTokenFilter,
@@ -75,6 +95,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         roleHierarchy.setHierarchy(roles);
         return roleHierarchy;
 
+    }
+
+    @Bean
+    public UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource corsConfigSource = new UrlBasedCorsConfigurationSource();
+
+        CorsConfiguration corsConfig = new CorsConfiguration();
+        corsConfig.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
+        corsConfig.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
+        corsConfig.addAllowedOriginPattern("*");
+        corsConfig.setAllowCredentials(true);
+        corsConfig.setMaxAge(corsConfig.getMaxAge());
+
+        corsConfigSource.registerCorsConfiguration("/**", corsConfig);
+        return corsConfigSource;
     }
 
     @Bean

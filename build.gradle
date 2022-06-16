@@ -60,7 +60,10 @@ project(':springsec-jwt') {
 project(':springsec-oauth') {
     dependencies {
         api project(':springsec-common')
+        implementation 'org.springframework.boot:spring-boot-configuration-processor'
         implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
         implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     }
 }

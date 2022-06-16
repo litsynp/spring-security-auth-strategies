@@ -1,5 +1,6 @@
 package com.litsynp.springsec.oauth.global.auth;
 
+import com.litsynp.springsec.oauth.domain.auth.service.UserDetailsServiceImpl;
 import com.litsynp.springsec.oauth.global.util.JwtUtil;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -28,8 +29,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     /**
      * Authenticate user using JWT token from request and chain the filter.
      *
-     * @param request HTTP request
-     * @param response HTTP Response
+     * @param request     HTTP request
+     * @param response    HTTP Response
      * @param filterChain Filter chain
      */
     @Override
@@ -40,10 +41,11 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
             // If JWT Bearer token is present
             if (bearerToken != null && jwtUtil.validateToken(bearerToken)) {
-                String email = jwtUtil.getEmailFromToken(bearerToken);
+                String memberIdStr = jwtUtil.getMemberIdStrFromToken(bearerToken);
 
                 // Authenticate user with email parsed from JWT
-                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                UserDetails userDetails = ((UserDetailsServiceImpl) userDetailsService)
+                        .loadUserByMemberId(Long.parseLong(memberIdStr));
 
                 // Create authentication
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

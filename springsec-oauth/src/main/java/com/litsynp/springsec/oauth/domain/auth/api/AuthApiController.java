@@ -17,7 +17,6 @@ import com.litsynp.springsec.oauth.global.util.JwtUtil;
 import java.net.URI;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,7 +33,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/v1/auth")
 @RequiredArgsConstructor
-@Slf4j
 public class AuthApiController {
 
     private final AuthenticationManager authenticationManager;
@@ -99,7 +97,7 @@ public class AuthApiController {
 
         // Create access token
         Member member = refreshToken.getMember();
-        String accessToken = jwtUtil.generateTokenFromEmail(member.getEmail());
+        String accessToken = jwtUtil.generateTokenFromMemberId(member.getId());
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().build()

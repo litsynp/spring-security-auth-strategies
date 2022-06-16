@@ -21,8 +21,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @Import({JwtUtil.class, SpringSecurityWebAuxTestConfig.class})
 @TestPropertySource(properties = {
-        "app.jwt-secret=foobar",
-        "app.jwt-access-expiration-ms=3600000"})
+        "app.auth.jwt-secret=foobar",
+        "app.auth.jwt-access-expiration-ms=3600000"})
 class JwtUtilTest {
 
     @Value("${app.jwt-secret}")
@@ -54,10 +54,10 @@ class JwtUtilTest {
     @Test
     void generateTokenFromEmail_ok() {
         // given
-        String email = getBasicMember().getEmail();
+        Long memberId = getBasicMember().getId();
 
         // when
-        String jwtToken = jwtUtil.generateTokenFromEmail(email);
+        String jwtToken = jwtUtil.generateTokenFromMemberId(memberId);
 
         // then
         String subject = Jwts.parser()
@@ -72,22 +72,22 @@ class JwtUtilTest {
     @Test
     void getEmailFromToken_ok() {
         // given
-        String email = getBasicMember().getEmail();
-        String jwtToken = jwtUtil.generateTokenFromEmail(email);
+        Long memberId = getBasicMember().getId();
+        String jwtToken = jwtUtil.generateTokenFromMemberId(memberId);
 
         // when
-        String emailFromToken = jwtUtil.getEmailFromToken(jwtToken);
+        Long memberIdFromToken = Long.parseLong(jwtUtil.getMemberIdStrFromToken(jwtToken));
 
         // then
-        assertThat(emailFromToken).isEqualTo(email);
+        assertThat(memberIdFromToken).isEqualTo(memberId);
     }
 
     @Test
     @WithMockUser("testuser@example.com")
     void validateToken_ok() {
         // given
-        String email = getBasicMember().getEmail();
-        String jwtToken = jwtUtil.generateTokenFromEmail(email);
+        Long memberId = getBasicMember().getId();
+        String jwtToken = jwtUtil.generateTokenFromMemberId(memberId);
 
         // when
         boolean result = jwtUtil.validateToken(jwtToken);

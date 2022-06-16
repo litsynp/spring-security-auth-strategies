@@ -1,0 +1,5 @@
+app:
+  auth:
+    jwt-secret: ${APP_JWT_SECRET:foobar}
+    jwt-access-expiration-ms: 3600000
+    jwt-refresh-expiration-ms: 86400000

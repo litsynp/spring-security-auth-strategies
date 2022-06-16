@@ -42,9 +42,9 @@ import org.springframework.test.context.TestPropertySource;
 @WebMvcTest(AuthApiController.class)
 @Import({AuthMapper.class})
 @TestPropertySource(properties = {
-        "app.jwt-secret=foobar",
-        "app.jwt-access-expiration-ms=3600000",
-        "app.jwt-refresh-expiration-ms=86400000"})
+        "app.auth.jwt-secret=foobar",
+        "app.auth.jwt-access-expiration-ms=3600000",
+        "app.auth.jwt-refresh-expiration-ms=86400000"})
 class AuthApiControllerTest extends ApiMockControllerTest {
 
     @Mock
@@ -150,7 +150,7 @@ class AuthApiControllerTest extends ApiMockControllerTest {
         TokenResponseDto responseDto = authMapper.from(accessToken, refreshToken.getToken(),
                 member);
 
-        given(jwtUtil.generateTokenFromEmail(member.getEmail()))
+        given(jwtUtil.generateTokenFromMemberId(member.getId()))
                 .willReturn(accessToken);
 
         given(refreshTokenService.findByToken(refreshToken.getToken()))

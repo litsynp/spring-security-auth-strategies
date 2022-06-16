@@ -1,6 +1,22 @@
 server:
   port: 8083
 spring:
+  profiles:
+    active: local
+    include: jwt, oauth
+
+cors:
+  allowed-origins: http://localhost:3000
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: '*'
+  max-age: 3600
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
   jpa:
     hibernate:
       ddl-auto: create
@@ -9,18 +25,51 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
-#        dialect: org.hibernate.dialect.H2Dialect
-    database-platform:
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=true
     username: sa
     password:
-#    driver-class-name: org.h2.Driver
   h2:
     console:
       enabled: true
 
-app:
-  jwt-secret: foobar
-  jwt-access-expiration-ms: 3600000
-  jwt-refresh-expiration-ms: 86400000
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+  datasource:
+    url:
+    username:
+    password:
+  h2:
+    console:
+      enabled: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+  datasource:
+    url:
+    username:
+    password:

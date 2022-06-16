@@ -1,6 +1,7 @@
 package com.litsynp.springsec.oauth.global.util;
 
 import com.litsynp.springsec.oauth.domain.auth.vo.UserDetailsVo;
+import com.litsynp.springsec.oauth.global.config.AuthProperties;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -8,45 +9,44 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import java.util.Date;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class JwtUtil {
 
-    @Value("${app.jwt-secret}")
-    private String jwtSecret;
-
-    @Value("${app.jwt-access-expiration-ms}")
-    private int jwtAccessExpirationMs;
+    private final AuthProperties authProperties;
 
     public String generateToken(Authentication authentication) {
         UserDetailsVo userPrincipal = (UserDetailsVo) authentication.getPrincipal();
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(userPrincipal.getVoEmail())
+                .setSubject(userPrincipal.getId().toString())
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + jwtAccessExpirationMs))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .setExpiration(new Date(now.getTime() +
+                        authProperties.getAuth().getJwtAccessExpirationMs()))
+                .signWith(SignatureAlgorithm.HS512, authProperties.getAuth().getJwtSecret())
                 .compact();
     }
 
-    public String generateTokenFromEmail(String email) {
+    public String generateTokenFromMemberId(Long memberId) {
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(memberId.toString())
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + jwtAccessExpirationMs))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .setExpiration(new Date(now.getTime() +
+                        authProperties.getAuth().getJwtAccessExpirationMs()))
+                .signWith(SignatureAlgorithm.HS512, authProperties.getAuth().getJwtSecret())
                 .compact();
     }
 
-    public String getEmailFromToken(String token) {
+    public String getMemberIdStrFromToken(String token) {
         return Jwts.parser()
-                .setSigningKey(jwtSecret)
+                .setSigningKey(authProperties.getAuth().getJwtSecret())
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
@@ -54,7 +54,9 @@ public class JwtUtil {
 
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+            Jwts.parser()
+                    .setSigningKey(authProperties.getAuth().getJwtSecret())
+                    .parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
             log.error("Invalid JWT signature: {}", e.getMessage());
