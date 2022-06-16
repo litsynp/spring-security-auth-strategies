@@ -9,11 +9,12 @@ using [Gradle multi module](https://spring.io/guides/gs/multi-module/).
 Some methods I plan to add are:
 
 - [x] Session Login
-- [ ] JWT Login
+- [x] JWT Login
 - [ ] OAuth 2.0 Login
 - [ ] API Gateway
 
 ## Modules
 
-- **springsec-common**: "The" root module.
+- **springsec**: The root module.
     - **springsec-session**: Implements session login. 
+    - **springsec-jwt**: Implements [JWT](https://jwt.io/introduction) ([Bearer](https://oauth.net/2/bearer-tokens/)) login.
