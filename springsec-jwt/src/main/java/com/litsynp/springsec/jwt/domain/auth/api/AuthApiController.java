@@ -112,9 +112,9 @@ public class AuthApiController {
     /**
      * Invalidate and delete given refresh token if it exists
      */
-    @DeleteMapping("/tokens/refresh")
+    @DeleteMapping("/refresh-tokens")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> invalidateRefreshTokens(
+    public ResponseEntity<Void> invalidateRefreshToken(
             @Valid @RequestBody RefreshTokenInvalidateRequestDto dto) {
         authService.checkAuthorization(dto.getMemberId());
         refreshTokenService.deleteByToken(dto.getRefreshToken());
@@ -124,7 +124,7 @@ public class AuthApiController {
     /**
      * Invalidate and delete all existing refresh tokens of member
      */
-    @DeleteMapping("/tokens/refresh/all")
+    @DeleteMapping("/refresh-tokens/all")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> invalidateAllRefreshTokensOfMember(
             @Valid @RequestBody RefreshTokenAllInvalidateRequestDto dto) {
