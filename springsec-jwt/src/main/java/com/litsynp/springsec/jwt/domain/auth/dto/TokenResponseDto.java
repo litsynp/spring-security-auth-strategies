@@ -13,9 +13,17 @@ public class TokenResponseDto {
     private AuthMemberResponseDto member;
 
     @Builder
-    public TokenResponseDto(String tokenType, String accessToken, String refreshToken,
+    public TokenResponseDto(String accessToken, String refreshToken,
             AuthMemberResponseDto member) {
         this.tokenType = "Bearer";
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.member = member;
+    }
+
+    public TokenResponseDto(String tokenType, String accessToken, String refreshToken,
+            AuthMemberResponseDto member) {
+        this.tokenType = tokenType;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.member = member;
