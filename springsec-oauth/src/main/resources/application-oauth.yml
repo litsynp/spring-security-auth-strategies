@@ -4,20 +4,20 @@ spring:
       client:
         registration:
           google:
-            client-id: ${OAUTH_GOOGLE_CLIENT_ID:null}
-            client-secret: ${OAUTH_GOOGLE_CLIENT_SECRET:null}
+            client-id: ${OAUTH_GOOGLE_CLIENT_ID:#{null}}
+            client-secret: ${OAUTH_GOOGLE_CLIENT_SECRET:#{null}}
             scope:
               - email
               - profile
           facebook:
-            client-id: ${OAUTH_FACEBOOK_CLIENT_ID:null}
-            client-secret: ${OAUTH_FACEBOOK_CLIENT_SECRET:null}
+            client-id: ${OAUTH_FACEBOOK_CLIENT_ID:#{null}}
+            client-secret: ${OAUTH_FACEBOOK_CLIENT_SECRET:#{null}}
             scope:
               - email
               - public_profile
           naver:
-            client-id: ${OAUTH_NAVER_CLIENT_ID:null}
-            client-secret: ${OAUTH_NAVER_CLIENT_SECRET:null}
+            client-id: ${OAUTH_NAVER_CLIENT_ID:#{null}}
+            client-secret: ${OAUTH_NAVER_CLIENT_SECRET:#{null}}
             client-authentication-method: post
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
@@ -27,8 +27,8 @@ spring:
               - profile_image
             client-name: Kakao
           kakao:
-            client-id: ${OAUTH_KAKAO_CLIENT_ID:null}
-            client-secret: ${OAUTH_KAKAO_CLIENT_SECRET:null}
+            client-id: ${OAUTH_KAKAO_CLIENT_ID:#{null}}
+            client-secret: ${OAUTH_KAKAO_CLIENT_SECRET:#{null}}
             client-authentication-method: post
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
