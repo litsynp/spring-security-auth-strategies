@@ -16,7 +16,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetailsVo loadUserByUsername(String email) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(email).map(UserDetailsVo::new)
+        return memberRepository.findByEmail(email).map(UserDetailsVo::from)
                 .orElseThrow(UnauthorizedException::new);
     }
 }
