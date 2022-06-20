@@ -4,9 +4,21 @@ plugins {
 
 group = 'com.litsynp'
 version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    api project(':springsec-common')
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
 }
 
 test {

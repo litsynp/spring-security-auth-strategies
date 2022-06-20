@@ -4,9 +4,25 @@ plugins {
 
 group = 'com.litsynp'
 version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    api project(':springsec-common')
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
 
 test {
