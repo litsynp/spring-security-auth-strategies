@@ -14,7 +14,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -74,19 +73,6 @@ public class Member extends BaseTimeEntity {
         }
     }
 
-    @Builder
-    public Member(String email, String password) {
-        this.email = email;
-        this.password = password;
-        this.username = "";
-        this.active = true;
-        this.role = RoleType.USER;
-        this.providerType = ProviderType.LOCAL;
-        this.oauthId = null;
-        this.profileImageUrl = null;
-    }
-
-    @Builder
     public Member(String email, String password, RoleType role) {
         this.email = email;
         this.password = password;
@@ -96,6 +82,10 @@ public class Member extends BaseTimeEntity {
         this.providerType = ProviderType.LOCAL;
         this.oauthId = null;
         this.profileImageUrl = null;
+    }
+
+    public Member(String email, String password) {
+        this(email, password, RoleType.USER);
     }
 
     public Member(OAuth2UserInfo userInfo, ProviderType providerType) {
