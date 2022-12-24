@@ -25,7 +25,7 @@ spring:
               - nickname
               - email
               - profile_image
-            client-name: Kakao
+            client-name: Naver
           kakao:
             client-id: ${OAUTH_KAKAO_CLIENT_ID:#{null}}
             client-secret: ${OAUTH_KAKAO_CLIENT_SECRET:#{null}}
