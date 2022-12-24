@@ -55,7 +55,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             oAuth2User.getAttributes());
 
         // Check for existing member
-        Optional<Member> savedMemberOptional = memberRepository.findByOauthId(userInfo.getId());
+        Optional<Member> savedMemberOptional = memberRepository.findByEmail(userInfo.getEmail());
         Member savedMember;
         if (savedMemberOptional.isPresent()) {
             // If member exists, use it
