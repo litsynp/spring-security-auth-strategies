@@ -1,5 +1,6 @@
 package com.litsynp.springsec.oauth.domain.member.domain;
 
+import com.litsynp.springsec.oauth.domain.oauth.domain.OAuth2UserInfo;
 import com.litsynp.springsec.oauth.domain.oauth.domain.ProviderType;
 import com.litsynp.springsec.oauth.global.domain.domain.BaseTimeEntity;
 import javax.persistence.Column;
@@ -20,7 +21,7 @@ import lombok.Setter;
 
 @Entity
 @Table(uniqueConstraints = {
-        @UniqueConstraint(name = "member_AK01", columnNames = {"providerType", "oauthId"})})
+    @UniqueConstraint(name = "member_AK01", columnNames = {"providerType", "oauthId"})})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
@@ -60,6 +61,18 @@ public class Member extends BaseTimeEntity {
         this.password = password;
     }
 
+    public void update(OAuth2UserInfo userInfo) {
+        // Set name of the user from OAuth provider if updated
+        if (userInfo.getName() != null && !this.username.equals(userInfo.getName())) {
+            this.username = userInfo.getName();
+        }
+
+        // Set user profile image from OAuth provider if updated
+        if (userInfo.getImageUrl() != null &&
+            !this.profileImageUrl.equals(userInfo.getImageUrl())) {
+            this.profileImageUrl = userInfo.getImageUrl();
+        }
+    }
 
     @Builder
     public Member(String email, String password) {
@@ -85,16 +98,14 @@ public class Member extends BaseTimeEntity {
         this.profileImageUrl = null;
     }
 
-    @Builder
-    public Member(String email, String password, String username, RoleType role,
-            ProviderType providerType, String oauthId, String profileImageUrl) {
-        this.email = email;
-        this.password = password;
-        this.username = username;
+    public Member(OAuth2UserInfo userInfo, ProviderType providerType) {
+        this.email = userInfo.getEmail();
+        this.password = "";
+        this.username = userInfo.getName();
         this.active = true;
-        this.role = role;
+        this.role = RoleType.USER;
         this.providerType = providerType;
-        this.oauthId = oauthId;
-        this.profileImageUrl = profileImageUrl;
+        this.oauthId = userInfo.getId();
+        this.profileImageUrl = userInfo.getImageUrl();
     }
 }
