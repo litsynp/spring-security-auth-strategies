@@ -41,54 +41,45 @@ class MemberApiControllerTest extends ApiMockControllerTest {
     void register_ok() throws Exception {
         // given
         MemberCreateRequestDto requestDto = new MemberCreateRequestDto("testuser1@example.com",
-                "12345678");
+            "12345678");
 
-        Member member = Member.builder()
-                .email("testuser1@example.com")
-                .password("encrypted")
-                .build();
-
-        Member created = Member.builder()
-                .email("testuser1@example.com")
-                .password("encrypted")
-                .build();
+        Member member = new Member("testuser1@example.com", "encrypted");
+        Member created = new Member("testuser1@example.com", "encrypted");
         FieldUtil.writeField(created, "id", 1L);
 
         given(memberService.register(any()))
-                .willReturn(created);
+            .willReturn(created);
 
         // when & then
         mockMvc.perform(post("/v1/members")
-                        .content(objectMapper.writeValueAsString(requestDto))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .with(csrf()))
-                .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(content().string(
-                        objectMapper.writeValueAsString(memberMapper.toResponseDto(created))));
+                .content(objectMapper.writeValueAsString(requestDto))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(csrf()))
+            .andDo(print())
+            .andExpect(status().isCreated())
+            .andExpect(content().string(
+                objectMapper.writeValueAsString(memberMapper.toResponseDto(created))));
     }
 
     @Test
     @DisplayName("Get one member - Ok")
     void getOne_ok() throws Exception {
         // given
-        Member member = Member.builder()
-                .email("testuser1@example.com")
-                .build();
+        Member member = new Member("testuser1@example.com", "encrypted");
         FieldUtil.writeField(member, "id", 3L);
 
         given(memberService.findById(member.getId()))
-                .willReturn(member);
+            .willReturn(member);
 
         // when & then
         mockMvc.perform(get("/v1/members/{id}", member.getId())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(content().string(
-                        objectMapper.writeValueAsString(memberMapper.toResponseDto(member))))
-                .andExpect(status().isOk());
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(content().string(
+                objectMapper.writeValueAsString(memberMapper.toResponseDto(member))))
+            .andExpect(status().isOk());
     }
 
     @Test
@@ -97,14 +88,14 @@ class MemberApiControllerTest extends ApiMockControllerTest {
     void deleteMember_ok() throws Exception {
         // given
         given(memberService.findById(SpringSecurityWebAuxTestConfig.getBasicMember().getId()))
-                .willReturn(SpringSecurityWebAuxTestConfig.getBasicMember());
+            .willReturn(SpringSecurityWebAuxTestConfig.getBasicMember());
 
         // when & then
         mockMvc.perform(
-                        delete("/v1/members/{id}", SpringSecurityWebAuxTestConfig.getBasicMember().getId())
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isNoContent());
+                delete("/v1/members/{id}", SpringSecurityWebAuxTestConfig.getBasicMember().getId())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isNoContent());
     }
 }

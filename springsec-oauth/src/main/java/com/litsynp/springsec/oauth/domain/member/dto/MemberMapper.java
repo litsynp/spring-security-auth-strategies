@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component;
 public class MemberMapper {
 
     public Member toEntity(MemberCreateRequestDto dto) {
-        return Member.builder()
-                .email(dto.getEmail())
-                .password(dto.getPassword())
-                .build();
+        return new Member(dto.getEmail(), dto.getPassword());
     }
 
     public MemberResponseDto toResponseDto(Member member) {
