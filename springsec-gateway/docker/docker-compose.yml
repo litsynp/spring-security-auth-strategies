@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: >
+      --include /usr/local/etc/redis/redis.conf
+      --requirepass testpass
+      --port 6379
+    environment:
+      - REDIS_PASSWORD=testpass
+    volumes:
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf

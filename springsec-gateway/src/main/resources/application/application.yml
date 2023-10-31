@@ -1,0 +1,12 @@
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    password: testpass
+  datasource:
+    url: jdbc:h2:mem:testdb;database_to_lower=true;
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true

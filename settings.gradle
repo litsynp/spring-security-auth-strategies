@@ -3,4 +3,5 @@ include 'springsec-common'
 include 'springsec-session'
 include 'springsec-jwt'
 include 'springsec-oauth'
+include 'springsec-gateway'
 
